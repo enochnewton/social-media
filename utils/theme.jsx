@@ -15,11 +15,13 @@ const colorTokens = {
     primaryDark: "#F4FAFE",
     borderLight: "#DFF2FC",
     borderDark: "#868788",
+    formLight: "#DFF2FC",
+    formDark: "#052739",
   },
   text: {
     primaryLight: "#000",
     primaryDark: "#F8F8F8",
-    secondaryLight: "#8E8E8E",
+    secondaryLight: "#323232",
     secondaryDark: "#8E8E8E",
   },
   background: {
@@ -35,6 +37,8 @@ const colorTokens = {
     white: "#ffffff",
     bgLightButton: "#77848B",
     bgDarkButton: "#F3F4F5",
+    bgCommentLight: "#F3F4F5",
+    bgCommentDark: "#232323",
   },
 };
 
@@ -51,6 +55,7 @@ const themeSettings = mode => {
             secondary: {
               main: colorTokens.secondary.primaryDark,
               border: colorTokens.secondary.borderDark,
+              form: colorTokens.secondary.formDark,
             },
             background: {
               default: colorTokens.background.Dark,
@@ -61,12 +66,16 @@ const themeSettings = mode => {
             },
             bg: {
               main: colorTokens.custom.navDark,
+              comment: colorTokens.custom.bgCommentDark,
             },
             icon: {
               main: "#ffffff",
             },
             button: {
               main: colorTokens.custom.bgDarkButton,
+            },
+            error: {
+              main: colorTokens.error.main,
             },
           }
         : {
@@ -77,6 +86,7 @@ const themeSettings = mode => {
             secondary: {
               main: colorTokens.secondary.primaryLight,
               border: colorTokens.secondary.borderLight,
+              form: colorTokens.secondary.formLight,
             },
             background: {
               default: colorTokens.background.Light,
@@ -87,12 +97,16 @@ const themeSettings = mode => {
             },
             bg: {
               main: colorTokens.custom.navLight,
+              comment: colorTokens.custom.bgCommentLight,
             },
             icon: {
               main: "#ffffff",
             },
             button: {
               main: colorTokens.custom.bgLightButton,
+            },
+            error: {
+              main: colorTokens.error.main,
             },
           }),
     },

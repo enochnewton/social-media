@@ -1,19 +1,12 @@
-"use client";
-import Container from "@mui/material/Container";
-import { homeContainerSx } from "@utils/styles";
-import PageContent from "@components/PageContent";
-import ResponsiveLayout from "@components/Layout";
-import { useSelector } from "react-redux";
+import CreatePost from "@components/CreatePost";
+import Post from "@components/Post";
+import { posts } from "@utils/data";
 
-const Home = () => {
-  const linkName = useSelector(state => state.linkName);
-  return (
-    <Container component='section' sx={homeContainerSx}>
-      <ResponsiveLayout>
-        <PageContent linkName={linkName} />
-      </ResponsiveLayout>
-    </Container>
-  );
-};
+const HomePage = () => (
+  <div>
+    <CreatePost />
+    <Post posts={posts} />
+  </div>
+);
 
-export default Home;
+export default HomePage;

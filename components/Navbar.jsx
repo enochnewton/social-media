@@ -23,45 +23,45 @@ import CopyrightOutlined from "@mui/icons-material/Copyright";
 import CustomBtn from "./Button";
 import { navItems } from "./Reusable";
 import { useDispatch, useSelector } from "react-redux";
-import { setLinkName, setMenuOpen, setMode } from "@state";
+import { setMode } from "@state";
 import { appStack1Sx, appbarSx } from "@utils/styles";
 import Link from "next/link";
-import { useCallback } from "react";
 
 const Navbar = () => {
   const isDesktop = useMediaQuery("(min-width:900px)");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const dispatch = useDispatch();
   const mode = useSelector(state => state.mode);
-  const menuOpen = useSelector(state => state.menuOpen);
   const drawerWidth = 300;
 
-  const handleDrawerToggle = useCallback(() => {
-    dispatch(setMenuOpen());
-  }, []);
+  const handleDrawerToggle = () => {
+    setMenuOpen(prev => !prev);
+  };
 
-  const handleMode = useCallback(() => {
+  const handleMode = () => {
     dispatch(setMode());
-  }, []);
-
-  const handleLink = useCallback(
-    link => {
-      dispatch(setLinkName(link));
-    },
-    [dispatch]
-  );
+  };
 
   return (
     <Box>
       <AppBar position='fixed' component='nav' sx={appbarSx}>
         <Stack sx={appStack1Sx}>
-          <Typography
-            variant='h1'
-            sx={{ fontSize: { xs: "24px", sm: "40px" } }}
-            color='primary'
+          <Link
+            style={{ textTransform: "none", textDecoration: "none" }}
+            href='/'
           >
-            Sociopedia
-          </Typography>
+            <Typography
+              variant='h1'
+              sx={{
+                fontSize: { xs: "24px", sm: "40px" },
+                textTransform: "none",
+              }}
+              color='primary'
+            >
+              Sociopedia
+            </Typography>
+          </Link>
 
           <IconButton
             color='inherit'
@@ -165,17 +165,21 @@ const Navbar = () => {
               </Stack>
 
               {/* buttons stack */}
-              <Link href='/profile'>
+              <Link
+                style={{ textTransform: "none", textDecoration: "none" }}
+                href='/profile'
+              >
                 <CustomBtn name='My Profile' py='8px' px='32px' />
               </Link>
             </Stack>
             <List sx={{ mb: { md: "64px" } }}>
               {navItems.map(item => (
-                <React.Fragment key={item.name}>
-                  <ListItem
-                    onClick={() => handleLink(item.name)}
-                    disablePadding
-                  >
+                <Link
+                  style={{ textTransform: "none", textDecoration: "none" }}
+                  href={item.link}
+                  key={item.name}
+                >
+                  <ListItem disablePadding>
                     <ListItemButton sx={{ textAlign: "start" }}>
                       <ListItemIcon
                         sx={{ textAlign: "center", color: "secondary.main" }}
@@ -189,7 +193,7 @@ const Navbar = () => {
                     </ListItemButton>
                   </ListItem>
                   <Divider />
-                </React.Fragment>
+                </Link>
               ))}
             </List>
             <Stack alignItems='center' my='32px' gap='24px'>
@@ -199,10 +203,7 @@ const Navbar = () => {
                   height: "max-content",
                   width: "max-content",
                 }}
-                onClick={event => {
-                  handleMode();
-                  event.stopPropagation();
-                }}
+                onClick={handleMode}
                 color='inherit'
                 aria-label='mode'
               >

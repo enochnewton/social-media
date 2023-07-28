@@ -92,4 +92,55 @@ const posts = [
     image: "/post-6.jpg",
   },
 ];
-export { messages, posts };
+
+const comments = [
+  {
+    id: 1,
+    firstName: "Jessica",
+    lastName: "Gilmore",
+    avatar: "/profile-1.jpg",
+    likes: "4",
+    text: "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  },
+  {
+    id: 2,
+    firstName: "Michael",
+    lastName: "Smith",
+    avatar: "/profile-2.jpg",
+    likes: "4",
+    text: "Happy Sunday, everyone! 🌞 Enjoying a relaxing day with my favorite book.",
+  },
+  {
+    id: 3,
+    firstName: "Emily",
+    lastName: "Johnson",
+    avatar: "/profile-3.jpg",
+    likes: "4",
+    text: "Just finished a fantastic workout at the gym! Feeling pumped and energized! 💪🏋️‍♀️",
+  },
+  {
+    id: 4,
+    firstName: "David",
+    lastName: "Lee",
+    avatar: "/profile-4.jpg",
+    likes: "4",
+    text: "Exploring the beautiful countryside this weekend. Nature is truly amazing! 🌳🍃",
+  },
+  {
+    id: 5,
+    firstName: "Sophia",
+    lastName: "Wang",
+    avatar: "/profile-5.jpg",
+    likes: "4",
+    text: "Having a delightful lunch with friends at my favorite restaurant! 🍔🍟",
+  },
+  {
+    id: 6,
+    firstName: "James",
+    lastName: "Davis",
+    avatar: "/profile-6.jpg",
+    likes: "4",
+    text: "Just adopted this adorable little furball! Meet my new best friend, Max! 🐶💕",
+  },
+];
+export { messages, posts, comments };

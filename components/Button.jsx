@@ -21,7 +21,6 @@ const CustomBtn = React.memo(
   }) => {
     return (
       <Button
-        {...props}
         variant={variant}
         color={color}
         startIcon={icon}
@@ -37,6 +36,7 @@ const CustomBtn = React.memo(
             border,
             borderColor,
           },
+          ...props,
         }}
       >
         <Typography

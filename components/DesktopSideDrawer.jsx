@@ -53,24 +53,34 @@ const DesktopSideDrawer = () => {
         </Stack>
 
         {/* buttons stack */}
-        <Link href='/profile'>
+        <Link
+          style={{ textTransform: "none", textDecoration: "none" }}
+          href='/profile'
+        >
           <CustomBtn name='My Profile' py='8px' px='32px' />
         </Link>
       </Stack>
 
       <List sx={{ mb: { md: "64px" } }}>
-        <ListItem disablePadding>
-          <ListItemButton sx={{ textAlign: "start" }}>
-            <ListItemIcon sx={{ textAlign: "center", color: "secondary.main" }}>
-              {navItems[2].icon}
-            </ListItemIcon>
-            <ListItemText
-              primary={navItems[2].name}
-              sx={{ color: "text.secondary" }}
-            />
-          </ListItemButton>
-        </ListItem>
-        <Divider />
+        <Link
+          style={{ textTransform: "none", textDecoration: "none" }}
+          href={navItems[2].link}
+        >
+          <ListItem disablePadding>
+            <ListItemButton sx={{ textAlign: "start" }}>
+              <ListItemIcon
+                sx={{ textAlign: "center", color: "secondary.main" }}
+              >
+                {navItems[2].icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={navItems[2].name}
+                sx={{ color: "text.secondary" }}
+              />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+        </Link>
       </List>
 
       {/* footer */}

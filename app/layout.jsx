@@ -1,6 +1,10 @@
 import { Merriweather } from "next/font/google";
 import Navbar from "@components/Navbar";
 import Providers from "@components/Providers";
+import { homeContainerSx } from "@utils/styles";
+import Container from "@mui/material/Container";
+import ResponsiveLayout from "@components/Layout";
+import "../index.css";
 
 const merriWeather = Merriweather({
   subsets: ["latin"],
@@ -18,7 +22,9 @@ export default function RootLayout({ children }) {
       <body className={merriWeather.className}>
         <Providers>
           <Navbar />
-          <main>{children}</main>
+          <Container component='section' sx={homeContainerSx}>
+            <ResponsiveLayout>{children}</ResponsiveLayout>
+          </Container>
         </Providers>
       </body>
     </html>

@@ -66,8 +66,8 @@ const appStack1Sx = {
 };
 
 const editProfileSx = {
-  width: "50px",
-  height: "50px",
+  width: { xs: "30px", sm: "50px" },
+  height: { xs: "30px", sm: "50px" },
   padding: "15px",
   justifyContent: "center",
   alignItems: "center",
@@ -76,6 +76,65 @@ const editProfileSx = {
   background: "rgba(255, 255, 255, 0.33)",
   boxShadow: "0px 4px 4px 0px rgba(0, 0, 0, 0.25)",
   backdropFilter: "blur(3px)",
+};
+
+const formSx = {
+  bgcolor: "secondary.form",
+  borderRadius: "10px",
+  "& .MuiOutlinedInput-root": {
+    backgroundColor: "transparent",
+    "& fieldset": {
+      borderColor: "transparent", // Set border color to transparent
+    },
+    "&:hover fieldset": {
+      borderColor: "transparent", // Set border color to transparent on hover
+    },
+  },
+};
+
+const postContainerSx = {
+  p: "12px",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  gap: "8px",
+  width: "100%",
+  border: "1px solid",
+  borderColor: "secondary.border",
+  borderRadius: "16px",
+  bgcolor: "bg.main",
+  mb: "24px",
+};
+
+const postTopSx = {
+  height: "56px",
+  justifyContent: "space-between",
+  alignItems: "center",
+  alignSelf: "stretch",
+  flexDirection: "row",
+};
+
+const postImageStyles = {
+  borderRadius: "8px",
+  width: "100%",
+  height: "270px",
+  objectFit: "fill",
+};
+
+const postIconsSx = {
+  justifyContent: "space-between",
+  alignItems: "center",
+  alignSelf: "stretch",
+  height: "40px",
+  flexDirection: "row",
+};
+
+const postIconsInnerSx = {
+  height: "40px",
+  justifyContent: "space-between",
+  alignItems: "center",
+  alignSelf: "stretch",
+  flexDirection: "row",
 };
 
 export {
@@ -87,4 +146,10 @@ export {
   appbarSx,
   appStack1Sx,
   editProfileSx,
+  formSx,
+  postContainerSx,
+  postTopSx,
+  postImageStyles,
+  postIconsSx,
+  postIconsInnerSx,
 };

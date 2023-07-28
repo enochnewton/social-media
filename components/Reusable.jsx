@@ -12,10 +12,10 @@ import Post from "./Post";
 import React from "react";
 
 const navItems = [
-  { name: "Friend Request", icon: <PersonAddIcon /> },
-  { name: "Friends", icon: <FriendsIcon /> },
-  { name: "Messages", icon: <MessageIcon /> },
-  { name: "Explore", icon: <ExploreIcon /> },
+  { name: "Friend Request", icon: <PersonAddIcon />, link: "/friend-request" },
+  { name: "Friends", icon: <FriendsIcon />, link: "/friend" },
+  { name: "Messages", icon: <MessageIcon />, link: "/messages" },
+  { name: "Explore", icon: <ExploreIcon />, link: "/add-friend" },
 ];
 
 const AddFriends = () => (
@@ -52,19 +52,25 @@ const HomePage = () => (
   </>
 );
 
-const EditProfile = React.memo(({ icon, title, ...props }) => (
+const EditProfile = React.memo(({ icon, title, onClick }) => (
   <Stack
+    onClick={onClick}
     sx={{
-      ...props,
+      flex: "1",
       display: "inline-flex",
       alignItems: "center",
-      gap: "14px;",
+      gap: "14px",
+      cursor: "pointer",
     }}
   >
     <Stack component='article' sx={editProfileSx}>
       {icon}
     </Stack>
-    <Typography variant='body1' color='text.secondary'>
+    <Typography
+      variant='body1'
+      sx={{ fontSize: { xs: "7px", sm: "11px" } }}
+      color='text.secondary'
+    >
       {title}
     </Typography>
   </Stack>

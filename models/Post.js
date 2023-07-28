@@ -22,13 +22,9 @@ const PostSchema = new Schema(
       type: String,
       required: [true, "User ID is required"],
     },
-    firstName: {
+    userName: {
       type: String,
-      required: [true, "First name is required"],
-    },
-    lastName: {
-      type: String,
-      required: [true, "Last name is required"],
+      required: [true, "name is required"],
     },
     text: {
       type: String,

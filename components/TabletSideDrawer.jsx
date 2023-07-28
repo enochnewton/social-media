@@ -24,9 +24,6 @@ import IconButton from "@mui/material/IconButton";
 const TabletSideDrawer = () => {
   const dispatch = useDispatch();
   const mode = useSelector(state => state.mode);
-  const handleLink = link => {
-    dispatch(setLinkName(link));
-  };
 
   const handleMode = () => {
     dispatch(setMode());
@@ -70,15 +67,22 @@ const TabletSideDrawer = () => {
           </Stack>
         </Stack>
         {/* buttons stack */}
-        <Link href='/profile'>
+        <Link
+          style={{ textTransform: "none", textDecoration: "none" }}
+          href='/profile'
+        >
           <CustomBtn name='My Profile' py='8px' px='32px' />
         </Link>
       </Stack>
 
       <List sx={{ mb: { md: "64px" } }}>
         {navItems.map(item => (
-          <React.Fragment key={item.name}>
-            <ListItem onClick={() => handleLink(item.name)} disablePadding>
+          <Link
+            style={{ textTransform: "none", textDecoration: "none" }}
+            href={item.link}
+            key={item.name}
+          >
+            <ListItem disablePadding>
               <ListItemButton sx={{ textAlign: "start" }}>
                 <ListItemIcon
                   sx={{ textAlign: "center", color: "secondary.main" }}
@@ -92,7 +96,7 @@ const TabletSideDrawer = () => {
               </ListItemButton>
             </ListItem>
             <Divider />
-          </React.Fragment>
+          </Link>
         ))}
       </List>
 
