@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Box from "@mui/material/Box";
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import LightMode from "@mui/icons-material/WbSunnyOutlined";
 import DarkMode from "@mui/icons-material/DarkModeOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -35,12 +35,7 @@ import { redirect } from "next/navigation";
 const Navbar = () => {
   const isDesktop = useMediaQuery("(min-width:900px)");
   const [menuOpen, setMenuOpen] = useState(false);
-  const { data: session } = useSession({
-    required: true,
-    onUnauthenticated() {
-      redirect("/api/auth/signin?callbackUrl=%2F");
-    },
-  });
+  const { data: session } = useSession();
 
   const dispatch = useDispatch();
   const mode = useSelector(state => state.mode);
