@@ -1,146 +1,46 @@
-const messages = [
-  {
-    id: 1,
-    sender: "Jessica Gilmore",
-    message: "Hey, how are you?",
-    time: "23:40",
-    avatar: "/profile-1.jpg",
-  },
-  {
-    id: 2,
-    sender: "Mikassa Ackerman",
-    message: "Where are you?",
-    time: "13:00",
-    avatar: "/profile-2.jpg",
-  },
-  {
-    id: 3,
-    sender: "Eren Yeager",
-    message: "Hey, how are you?",
-    time: "10:40",
-    avatar: "/profile-3.jpg",
-  },
-  {
-    id: 4,
-    sender: "Mikassa Ackerman",
-    message: "Where are you?",
-    time: "13:00",
-    avatar: "/profile-4.jpg",
-  },
-  {
-    id: 5,
-    sender: "Eren Yeager",
-    message: "Hey, how are you?",
-    time: "10:40",
-    avatar: "/profile-5.jpg",
-  },
-];
+import moment from "moment";
 
-const posts = [
-  {
-    id: 1,
-    firstName: "Jessica",
-    lastName: "Gilmore",
-    avatar: "/profile-1.jpg",
-    time: "20 mins ago",
-    text: "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    image: "/post-1.jpg",
-  },
-  {
-    id: 2,
-    firstName: "Michael",
-    lastName: "Smith",
-    avatar: "/profile-2.jpg",
-    time: "20 mins ago",
-    text: "Happy Sunday, everyone! 🌞 Enjoying a relaxing day with my favorite book.",
-    image: "/post-2.jpg",
-  },
-  {
-    id: 3,
-    firstName: "Emily",
-    lastName: "Johnson",
-    avatar: "/profile-3.jpg",
-    time: "20 mins ago",
-    text: "Just finished a fantastic workout at the gym! Feeling pumped and energized! 💪🏋️‍♀️",
-    image: "/post-3.jpg",
-  },
-  {
-    id: 4,
-    firstName: "David",
-    lastName: "Lee",
-    avatar: "/profile-4.jpg",
-    time: "20 mins ago",
-    text: "Exploring the beautiful countryside this weekend. Nature is truly amazing! 🌳🍃",
-    image: "/post-4.jpg",
-  },
-  {
-    id: 5,
-    firstName: "Sophia",
-    lastName: "Wang",
-    avatar: "/profile-5.jpg",
-    time: "20 mins ago",
-    text: "Having a delightful lunch with friends at my favorite restaurant! 🍔🍟",
-    image: "/post-5.jpg",
-  },
-  {
-    id: 6,
-    firstName: "James",
-    lastName: "Davis",
-    avatar: "/profile-6.jpg",
-    time: "20 mins ago",
-    text: "Just adopted this adorable little furball! Meet my new best friend, Max! 🐶💕",
-    image: "/post-6.jpg",
-  },
-];
+export const getTimeAgo = timestamp => {
+  const now = moment();
+  const time = moment(timestamp);
+  const diffMinutes = now.diff(time, "minutes");
+  const diffSeconds = now.diff(time, "seconds");
 
-const comments = [
-  {
-    id: 1,
-    firstName: "Jessica",
-    lastName: "Gilmore",
-    avatar: "/profile-1.jpg",
-    likes: "4",
-    text: "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  {
-    id: 2,
-    firstName: "Michael",
-    lastName: "Smith",
-    avatar: "/profile-2.jpg",
-    likes: "4",
-    text: "Happy Sunday, everyone! 🌞 Enjoying a relaxing day with my favorite book.",
-  },
-  {
-    id: 3,
-    firstName: "Emily",
-    lastName: "Johnson",
-    avatar: "/profile-3.jpg",
-    likes: "4",
-    text: "Just finished a fantastic workout at the gym! Feeling pumped and energized! 💪🏋️‍♀️",
-  },
-  {
-    id: 4,
-    firstName: "David",
-    lastName: "Lee",
-    avatar: "/profile-4.jpg",
-    likes: "4",
-    text: "Exploring the beautiful countryside this weekend. Nature is truly amazing! 🌳🍃",
-  },
-  {
-    id: 5,
-    firstName: "Sophia",
-    lastName: "Wang",
-    avatar: "/profile-5.jpg",
-    likes: "4",
-    text: "Having a delightful lunch with friends at my favorite restaurant! 🍔🍟",
-  },
-  {
-    id: 6,
-    firstName: "James",
-    lastName: "Davis",
-    avatar: "/profile-6.jpg",
-    likes: "4",
-    text: "Just adopted this adorable little furball! Meet my new best friend, Max! 🐶💕",
-  },
-];
-export { messages, posts, comments };
+  if (diffSeconds < 60) {
+    return `${diffSeconds} seconds ago`;
+  } else if (diffMinutes < 60) {
+    return diffMinutes === 1
+      ? `${diffMinutes} minute ago`
+      : `${diffMinutes} minutes ago`;
+  } else if (diffMinutes < 24 * 60) {
+    const diffHours = Math.floor(diffMinutes / 60);
+    return diffHours === 1 ? `${diffHours} hour ago` : `${diffHours} hours ago`;
+  } else if (diffMinutes < 7 * 24 * 60) {
+    const diffDays = Math.floor(diffMinutes / (24 * 60));
+    return diffDays === 1 ? ` ${diffDays} day ago` : `${diffDays} days ago`;
+  } else {
+    return moment(timestamp).format("MMMM Do");
+  }
+};
+export const getTimeAgoMsg = timestamp => {
+  const now = moment();
+  const time = moment(timestamp);
+  const diffMinutes = now.diff(time, "minutes");
+  const diffSeconds = now.diff(time, "seconds");
+
+  if (diffSeconds < 60) {
+    return `${diffSeconds} sec`;
+  } else if (diffMinutes < 60) {
+    return diffMinutes === 1
+      ? `${diffMinutes} min ago`
+      : `${diffMinutes} mins ago`;
+  } else if (diffMinutes < 24 * 60) {
+    const diffHours = Math.floor(diffMinutes / 60);
+    return diffHours === 1 ? `${diffHours} hr ago` : `${diffHours} hrs ago`;
+  } else if (diffMinutes < 7 * 24 * 60) {
+    const diffDays = Math.floor(diffMinutes / (24 * 60));
+    return diffDays === 1 ? ` ${diffDays} day ago` : `${diffDays} days ago`;
+  } else {
+    return moment(timestamp).format("MMMM Do");
+  }
+};

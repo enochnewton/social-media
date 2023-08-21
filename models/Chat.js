@@ -2,7 +2,7 @@ import { Schema, model, models } from "mongoose";
 
 const ChatSchema = new Schema(
   {
-    userIds: {
+    usersIds: {
       type: Array,
       required: [true, "User IDs are required"],
     },

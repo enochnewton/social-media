@@ -40,6 +40,22 @@ const colorTokens = {
     bgCommentLight: "#F3F4F5",
     bgCommentDark: "#232323",
   },
+  chat: {
+    chatBgLight: "#ffffff",
+    chatBgDark: "#1A1A1A",
+    chatBgSenderLight: "#2FA9ED",
+    chatBgSenderDark: "#4B9BC7",
+    chatBgReceiverLight: "#77848B",
+    chatBgReceiverDark: "#373737",
+    senderTextLight: "#ffffff",
+    senderTextDark: "#ffffff",
+    receiverTextLight: "#000000",
+    receiverTextDark: "#ffffff",
+    timeLight: "#000000",
+    timeDark: "#B3B3B3",
+    timeSenderLight: "#ffffff",
+    timeSenderDark: "#ffffff",
+  },
 };
 
 const themeSettings = mode => {
@@ -77,6 +93,15 @@ const themeSettings = mode => {
             error: {
               main: colorTokens.error.main,
             },
+            chat: {
+              main: colorTokens.chat.chatBgDark,
+              sender: colorTokens.chat.chatBgSenderDark,
+              receiver: colorTokens.chat.chatBgReceiverDark,
+              receiverText: colorTokens.chat.receiverTextDark,
+              senderText: colorTokens.chat.senderTextDark,
+              time: colorTokens.chat.timeDark,
+              timeSender: colorTokens.chat.timeSenderDark,
+            },
           }
         : {
             // light mode
@@ -107,6 +132,15 @@ const themeSettings = mode => {
             },
             error: {
               main: colorTokens.error.main,
+            },
+            chat: {
+              main: colorTokens.chat.chatBgLight,
+              sender: colorTokens.chat.chatBgSenderLight,
+              receiver: colorTokens.chat.chatBgReceiverLight,
+              receiverText: colorTokens.chat.receiverTextLight,
+              senderText: colorTokens.chat.senderTextLight,
+              time: colorTokens.chat.timeLight,
+              timeSender: colorTokens.chat.timeSenderLight,
             },
           }),
     },

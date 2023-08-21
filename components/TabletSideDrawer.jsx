@@ -1,101 +1,70 @@
 "use client";
-import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import LogoutOutlined from "@mui/icons-material/LogoutOutlined";
-import CopyrightOutlined from "@mui/icons-material/Copyright";
 import CustomBtn from "./Button";
 import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import LightMode from "@mui/icons-material/WbSunnyOutlined";
 import { navItems } from "./Reusable";
 import { useDispatch, useSelector } from "react-redux";
-import { setLinkName, setMode } from "@state";
+import { setMode } from "@state";
 import DarkMode from "@mui/icons-material/DarkModeOutlined";
 import React from "react";
 import Link from "next/link";
 import IconButton from "@mui/material/IconButton";
+import { Tooltip } from "@mui/material";
+import { signOut, useSession } from "next-auth/react";
 
 const TabletSideDrawer = () => {
   const dispatch = useDispatch();
   const mode = useSelector(state => state.mode);
+  const { data: session } = useSession();
 
   const handleMode = () => {
     dispatch(setMode());
   };
 
   return (
-    <Box
-      sx={{
-        textAlign: "center",
-        width: { xs: "80%", sm: "calc(40vw - 100px)", md: "auto" },
-        mx: "auto",
-      }}
-    >
+    <Box sx={{ textAlign: "center", mx: "28px" }}>
       {/* profile component */}
-      <Stack
-        alignItems='center'
-        bgcolor='bg.main'
-        sx={{
-          py: "24px",
-          my: "24px",
-          borderRadius: "8px",
-          border: "1px solid ",
-          borderColor: "secondary.border",
-          gap: "32px",
-        }}
-      >
-        {/* avatar stack */}
-        <Stack alignItems='center' gap='8px'>
-          <Avatar
-            alt='jane doe'
-            sx={{ width: "50px", height: "50px" }}
-            src='/profile-1.jpg'
-          />
-          <Stack>
-            <Typography variant='body1' color='text.primary' fontWeight='600'>
-              Jane Doe
-            </Typography>
-            <Typography variant='body1' color='text.secondary'>
-              @janedoe
-            </Typography>
-          </Stack>
-        </Stack>
-        {/* buttons stack */}
+
+      <Tooltip title='My Profile' placement='right' arrow>
         <Link
           style={{ textTransform: "none", textDecoration: "none" }}
           href='/profile'
         >
-          <CustomBtn name='My Profile' py='8px' px='32px' />
+          <Stack alignItems='center' my='16px'>
+            <Avatar
+              alt='jane doe'
+              sx={{ width: "80px", height: "80px" }}
+              src={session?.user.image}
+            />
+          </Stack>
         </Link>
-      </Stack>
+      </Tooltip>
 
-      <List sx={{ mb: { md: "64px" } }}>
+      <List
+        component={Stack}
+        sx={{ mb: "48px", alignItems: "center", alignSelf: "center", gap: 2 }}
+      >
         {navItems.map(item => (
           <Link
             style={{ textTransform: "none", textDecoration: "none" }}
             href={item.link}
             key={item.name}
           >
-            <ListItem disablePadding>
-              <ListItemButton sx={{ textAlign: "start" }}>
-                <ListItemIcon
-                  sx={{ textAlign: "center", color: "secondary.main" }}
-                >
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.name}
-                  sx={{ color: "text.secondary" }}
-                />
+            <Tooltip title={item.name} placement='right' arrow>
+              <ListItemButton
+                sx={{
+                  textAlign: "center",
+                  color: "secondary.main",
+                }}
+              >
+                {item.icon}
               </ListItemButton>
-            </ListItem>
-            <Divider />
+            </Tooltip>
           </Link>
         ))}
       </List>
@@ -120,32 +89,24 @@ const TabletSideDrawer = () => {
             <DarkMode fontSize='large' />
           )}
         </IconButton>
-        <CustomBtn
-          icon={<LogoutOutlined color='text.primary' />}
-          fullWidth
-          variant='outlined'
-          name='Log out'
-          py='8px'
-          px='32px'
-          color='button'
-          border='2px solid'
-          borderColor='button.main'
-          textColor='button.main'
-        />
-      </Stack>
 
-      {/* footer */}
-      <Stack
-        alignItems='center'
-        direction='row'
-        bottom='20px'
-        spacing={3}
-        sx={{ width: "80%", mx: "auto", justifyContent: "center" }}
-      >
-        <CopyrightOutlined />
-        <Typography variant='body1' color='text.primary'>
-          2023 Sociopedia. All rights reserved.
-        </Typography>
+        {/* logout */}
+        <div
+          onClick={() => signOut({ callbackUrl: `${window.location.origin}/` })}
+        >
+          <CustomBtn
+            icon={<LogoutOutlined color='text.primary' />}
+            fullWidth
+            variant='outlined'
+            name='Logout'
+            py='8px'
+            px='32px'
+            color='button'
+            border='2px solid'
+            borderColor='button.main'
+            textColor='button.main'
+          />
+        </div>
       </Stack>
     </Box>
   );

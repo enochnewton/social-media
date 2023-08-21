@@ -1,5 +1,4 @@
-import { Friends } from "@components/Reusable";
-import React from "react";
+import Friends from "@components/Friends";
 
 const Friend = () => {
   return <Friends />;

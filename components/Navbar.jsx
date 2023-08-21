@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Box from "@mui/material/Box";
-import React, { useState } from "react";
+import React, {  useEffect, useState } from "react";
 import LightMode from "@mui/icons-material/WbSunnyOutlined";
 import DarkMode from "@mui/icons-material/DarkModeOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -23,17 +23,41 @@ import CopyrightOutlined from "@mui/icons-material/Copyright";
 import CustomBtn from "./Button";
 import { navItems } from "./Reusable";
 import { useDispatch, useSelector } from "react-redux";
-import { setMode } from "@state";
-import { appStack1Sx, appbarSx } from "@utils/styles";
+import { setMode, setUser } from "@state";
+import { appStack1Sx, appbarSx, footerSx } from "@utils/styles";
 import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
+import { Tooltip } from "@mui/material";
+import UserProfileComponent from "./UserProfileComponent";
+import axios from "axios";
+import { redirect } from "next/navigation";
 
 const Navbar = () => {
   const isDesktop = useMediaQuery("(min-width:900px)");
   const [menuOpen, setMenuOpen] = useState(false);
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callbackUrl=%2F");
+    },
+  });
 
   const dispatch = useDispatch();
   const mode = useSelector(state => state.mode);
   const drawerWidth = 300;
+
+  useEffect(() => {
+    const findUser = async () => {
+      try {
+        const user = await axios.get(`/api/user/${session?.user.email}`);
+        dispatch(setUser(user.data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    if (session) findUser();
+  }, [session?.user.email]);
 
   const handleDrawerToggle = () => {
     setMenuOpen(prev => !prev);
@@ -73,6 +97,7 @@ const Navbar = () => {
             <MenuIcon sx={{ fontSize: "30px" }} />
           </IconButton>
 
+          {/* desktop */}
           {isDesktop && (
             <Stack direction='row' alignItems='center' spacing={3}>
               <IconButton
@@ -91,20 +116,28 @@ const Navbar = () => {
                 )}
               </IconButton>
 
-              <IconButton
-                sx={{
-                  height: "max-content",
-                  width: "max-content",
-                }}
-                color='inherit'
-                aria-label='profile'
+              <Tooltip
+                onClick={() =>
+                  signOut({ callbackUrl: `${window.location.origin}/` })
+                }
+                title='Logout'
+                placement='bottom'
               >
-                <Avatar
-                  alt='jane doe'
-                  src='/profile-1.jpg'
-                  sx={{ width: "45px", height: "45px" }}
-                />
-              </IconButton>
+                <IconButton
+                  sx={{
+                    height: "max-content",
+                    width: "max-content",
+                  }}
+                  color='inherit'
+                  aria-label='profile'
+                >
+                  <Avatar
+                    alt={session?.user.name}
+                    src={session?.user.image}
+                    sx={{ width: "45px", height: "45px" }}
+                  />
+                </IconButton>
+              </Tooltip>
             </Stack>
           )}
         </Stack>
@@ -131,47 +164,7 @@ const Navbar = () => {
             }}
           >
             {/* profile component */}
-            <Stack
-              alignItems='center'
-              bgcolor='bg.main'
-              sx={{
-                py: "24px",
-                my: "24px",
-                borderRadius: "8px",
-                border: "1px solid ",
-                borderColor: "secondary.border",
-                gap: "32px",
-              }}
-            >
-              {/* avatar stack */}
-              <Stack alignItems='center' gap='8px'>
-                <Avatar
-                  alt='jane doe'
-                  sx={{ width: "50px", height: "50px" }}
-                  src='/profile-1.jpg'
-                />
-                <Stack>
-                  <Typography
-                    variant='body1'
-                    color='text.primary'
-                    fontWeight='600'
-                  >
-                    Jane Doe
-                  </Typography>
-                  <Typography variant='body1' color='text.secondary'>
-                    @janedoe
-                  </Typography>
-                </Stack>
-              </Stack>
-
-              {/* buttons stack */}
-              <Link
-                style={{ textTransform: "none", textDecoration: "none" }}
-                href='/profile'
-              >
-                <CustomBtn name='My Profile' py='8px' px='32px' />
-              </Link>
-            </Stack>
+            <UserProfileComponent />
             <List sx={{ mb: { md: "64px" } }}>
               {navItems.map(item => (
                 <Link
@@ -213,27 +206,27 @@ const Navbar = () => {
                   <DarkMode fontSize='large' />
                 )}
               </IconButton>
-              <CustomBtn
-                icon={<LogoutOutlined color='text.primary' />}
-                fullWidth
-                variant='outlined'
-                name='Log out'
-                py='8px'
-                px='32px'
-                color='button'
-                border='2px solid'
-                borderColor='button.main'
-                textColor='button.main'
-              />
+              <div
+                onClick={() =>
+                  signOut({ callbackUrl: `${window.location.origin}/` })
+                }
+              >
+                <CustomBtn
+                  icon={<LogoutOutlined color='text.primary' />}
+                  fullWidth
+                  variant='outlined'
+                  name='Log out'
+                  py='8px'
+                  px='32px'
+                  color='button'
+                  border='2px solid'
+                  borderColor='button.main'
+                  textColor='button.main'
+                />
+              </div>
             </Stack>
             {/* footer */}
-            <Stack
-              alignItems='center'
-              direction='row'
-              bottom='20px'
-              spacing={3}
-              sx={{ width: "80%", mx: "auto", justifyContent: "center" }}
-            >
+            <Stack sx={footerSx}>
               <CopyrightOutlined />
               <Typography variant='body1' color='text.primary'>
                 2023 Sociopedia. All rights reserved.

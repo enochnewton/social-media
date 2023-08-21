@@ -28,7 +28,11 @@ const PostSchema = new Schema(
     },
     text: {
       type: String,
-      required: [true, "Post text is required"],
+      default: "",
+    },
+    email: {
+      type: String,
+      required: [true, "Email is required"],
     },
     likes: {
       type: Map,

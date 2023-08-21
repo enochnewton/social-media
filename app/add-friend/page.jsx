@@ -1,4 +1,4 @@
-import { AddFriends } from "@components/Reusable";
+import AddFriends from "@components/AddFriends";
 import React from "react";
 
 const AddFriend = () => {

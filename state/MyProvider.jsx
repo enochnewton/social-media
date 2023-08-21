@@ -48,7 +48,7 @@ const persistConfig = {
   key: "root",
   storage,
   version: 1,
-  whitelist: ["mode"],
+  whitelist: ["mode", "user"],
 };
 const persistedReducer = persistReducer(persistConfig, authReducer);
 const store = configureStore({

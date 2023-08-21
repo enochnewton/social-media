@@ -2,13 +2,9 @@ import { Schema, model, models } from "mongoose";
 
 const UserSchema = new Schema(
   {
-    firstName: {
+    fullName: {
       type: String,
-      required: [true, "First name is required"],
-    },
-    lastName: {
-      type: String,
-      required: [true, "Last name is required"],
+      required: [true, " name is required"],
     },
     email: {
       type: String,
@@ -20,13 +16,17 @@ const UserSchema = new Schema(
       default: "",
       required: [true, "Picture is required"],
     },
-    friends: {
-      type: Array,
-      default: [],
-    },
+    friends: [
+      {
+        _id: String,
+        fullName: String,
+        picturePath: String,
+      },
+    ],
     location: String,
     occupation: String,
     bio: String,
+    sessionId: String,
   },
   { timestamps: true }
 );

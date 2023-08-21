@@ -1,8 +1,5 @@
 import { Merriweather } from "next/font/google";
-import Navbar from "@components/Navbar";
 import Providers from "@components/Providers";
-import { homeContainerSx } from "@utils/styles";
-import Container from "@mui/material/Container";
 import ResponsiveLayout from "@components/Layout";
 import "../index.css";
 
@@ -14,6 +11,7 @@ const merriWeather = Merriweather({
 export const metadata = {
   title: "Sociopedia",
   description: "A social media platform for the modern age",
+  image: "/logo.jpg",
 };
 
 export default function RootLayout({ children }) {
@@ -21,10 +19,7 @@ export default function RootLayout({ children }) {
     <html lang='en'>
       <body className={merriWeather.className}>
         <Providers>
-          <Navbar />
-          <Container component='section' sx={homeContainerSx}>
-            <ResponsiveLayout>{children}</ResponsiveLayout>
-          </Container>
+          <ResponsiveLayout>{children}</ResponsiveLayout>
         </Providers>
       </body>
     </html>

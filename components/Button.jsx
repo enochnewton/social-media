@@ -17,6 +17,9 @@ const CustomBtn = React.memo(
     textColor = "white",
     border,
     borderColor,
+    disabled = false,
+    type = "button",
+    onClick,
     ...props
   }) => {
     return (
@@ -24,6 +27,9 @@ const CustomBtn = React.memo(
         variant={variant}
         color={color}
         startIcon={icon}
+        disabled={disabled}
+        type={type}
+        onClick={onClick}
         sx={{
           width,
           height,

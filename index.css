@@ -19,3 +19,15 @@
 ::-webkit-scrollbar-button {
   display: none;
 }
+
+.react-emoji {
+  flex-direction: row-reverse;
+  padding-right: 10px;
+}
+.react-emoji-picker--wrapper {
+  position: absolute;
+  right: 0;
+  left: 0;
+  margin: 0 auto;
+  z-index: 100;
+}
