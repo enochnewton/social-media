@@ -108,7 +108,7 @@ const IndividualChat = () => {
           <MoreVertIcon fontSize='large' />
         </Box>
       </Stack>
-      {/* chat container */}
+      {/* chat containers */}
       <ChatBox
         currentChat={currentChat}
         user={user}
