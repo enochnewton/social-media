@@ -16,7 +16,6 @@
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
-    "cloudinary": "^1.40.0",
     "firebase": "^10.3.0",
     "moment": "^2.29.4",
     "mongodb": "^5.7.0",
