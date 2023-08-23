@@ -34,6 +34,8 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, setPost } from "@state";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { deleteObject, ref } from "firebase/storage";
+import { storage } from "@utils/firebase";
 
 const Profile = React.memo(
   ({ data, width = "30px", height = "30px", isComment }) => {
@@ -61,10 +63,9 @@ const Post = ({ myPosts = false, post, loggedInUser }) => {
   const [commentsVisibility, setCommentsVisibility] = useState({});
   const [postComments, setPostComments] = useState({});
   const [comment, setComment] = useState("");
-  const user = useSelector(state => state.user);
   const isLiked = Boolean(post.likes[loggedInUser]);
   const likeCount = Object.keys(post.likes).length;
-
+  const user = useSelector(state => state.user);
   const dispatch = useDispatch();
 
   const { data: session } = useSession();
@@ -139,6 +140,16 @@ const Post = ({ myPosts = false, post, loggedInUser }) => {
   };
 
   const handleDeletePost = async () => {
+    // delete post from firebase
+    const fileRef = ref(storage, post.picturePath);
+
+    try {
+      await deleteObject(fileRef);
+      console.log("File deleted successfully");
+    } catch (error) {
+      console.log("Error deleting file:", error);
+    }
+
     try {
       await axios.delete(`/api/post`, {
         data: {

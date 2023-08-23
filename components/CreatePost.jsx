@@ -11,7 +11,6 @@ import {
   dropzoneStacksx,
   postImagesx,
 } from "@utils/styles";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -21,20 +20,23 @@ import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "@state";
 import axios from "axios";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "@utils/firebase";
+import { v4 } from "uuid";
 
 const CreatePost = () => {
-  const { data: session } = useSession();
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
   const [post, setPost] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
 
   const user = useSelector(state => state.user);
-
   const dispatch = useDispatch();
 
-  const handlePost = async e => {
+  const handlePost = e => {
     e.preventDefault();
-    if (!image) alert("Please select an image");
+
+    if (image === null) alert("Please select an image");
     const formData = new FormData();
     formData.append("userId", user._id);
     post === ""
@@ -42,20 +44,24 @@ const CreatePost = () => {
       : formData.append("description", post);
 
     formData.append("email", user.email);
-    if (image) {
-      formData.append("picture", image);
-      formData.append("picturePath", image.name);
-    }
 
-    try {
-      const response = await axios.post("/api/post", formData);
-      dispatch(setPosts(response.data));
-      setPost("");
-      setImage(null);
-      setIsImage(prev => !prev);
-    } catch (error) {
-      console.log(error);
-    }
+    // firebase storage
+    const imageRef = ref(storage, `images/${image.name + v4()}`);
+    uploadBytes(imageRef, image).then(snapshot => {
+      getDownloadURL(snapshot.ref).then(async url => {
+        formData.append("picturePath", url);
+
+        try {
+          const response = await axios.post("/api/post", formData);
+          dispatch(setPosts(response.data));
+          setPost("");
+          setImage(null);
+          setIsImage(prev => !prev);
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    });
   };
 
   return (
@@ -64,20 +70,19 @@ const CreatePost = () => {
         <Stack sx={{ alignItems: "center", flexDirection: "row", flex: "3" }}>
           <Avatar
             sx={{ width: "28px", height: "28px" }}
-            src={session?.user.image}
-            alt={session?.user.name}
+            src={user?.picturePath}
+            alt={user?.fullName}
           />
           <TextField
             onChange={e => setPost(e.target.value)}
             autoComplete='off'
             value={post}
             placeholder={`What's on your mind, ${
-              session?.user.name.split(" ")[0]
+              user?.fullName.split(" ")[0]
             }?`}
             fullWidth
             sx={{
               "& fieldset": { border: "none" },
-              p: "0",
             }}
           />
         </Stack>

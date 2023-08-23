@@ -49,6 +49,7 @@ const homeContainerSx = {
   "&::-webkit-scrollbar": {
     display: "none" /* Chrome */,
   },
+  px: { xs: "4px", sm: "16px" },
 };
 
 const appbarSx = {
@@ -93,7 +94,7 @@ const formSx = {
 };
 
 const postContainerSx = {
-  p: "12px",
+  p: { xs: "8px", sm: "16px" },
   flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
@@ -219,8 +220,8 @@ const createPostSx = {
   alignItems: "center",
   bgcolor: "bg.main",
   justifyContent: "space-between",
-  px: "22px",
-  py: "8px",
+  px: { xs: "14px", sm: "22px" },
+  py: { xs: "4px", sm: "8px" },
   borderRadius: "40px",
   border: "1px solid",
   borderColor: "secondary.border",

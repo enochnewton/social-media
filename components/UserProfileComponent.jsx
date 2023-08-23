@@ -1,15 +1,15 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import CustomBtn from "./Button";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
 const UserProfileComponent = () => {
-  const { data: session } = useSession();
+  const user = useSelector(state => state.user);
   return (
     <Stack
       alignItems='center'
@@ -26,22 +26,16 @@ const UserProfileComponent = () => {
       {/* avatar stack */}
       <Stack alignItems='center' gap='8px'>
         <Avatar
-          alt={session?.user.name}
+          alt={user?.fullName}
           sx={{ width: "50px", height: "50px" }}
-          src={session?.user.image}
+          src={user?.picturePath}
         />
         <Stack>
           <Typography variant='body1' color='text.primary' fontWeight='600'>
-            {session?.user.name
-              .split(" ")
-              .map(
-                name =>
-                  name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
-              )
-              .join(" ")}
+            {user?.fullName}
           </Typography>
           <Typography variant='body1' color='text.secondary'>
-            @{session?.user.email.split("@")[0]}
+            @{user?.email.split("@")[0]}
           </Typography>
         </Stack>
       </Stack>

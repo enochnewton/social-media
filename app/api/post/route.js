@@ -1,29 +1,15 @@
 import Post from "@models/Post";
 import User from "@models/User";
 import { connectToDB } from "@utils/database";
-import { writeFile, unlink } from "fs";
 import { NextResponse } from "next/server";
-import { join } from "path";
-import { promisify } from "util";
 
 export const POST = async req => {
-  const { userId, description, picture, picturePath, email } =
-    Object.fromEntries(await req.formData());
+  const { userId, description, picturePath, email } = Object.fromEntries(
+    await req.formData()
+  );
 
   if (!userId || !picturePath)
     return NextResponse.json({ message: "Missing fields" }, { status: 400 });
-
-  const bytes = await picture.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-
-  const uploadPath = join(process.cwd(), "public", "uploads", picturePath);
-  writeFile(uploadPath, buffer, err => {
-    if (err) {
-      throw err;
-    } else {
-      console.log("File written successfully");
-    }
-  });
 
   try {
     await connectToDB();
@@ -39,7 +25,7 @@ export const POST = async req => {
       userName: user.fullName,
       text: description,
       email,
-      picturePath: uploadPath.replace(/.*public\\uploads\\/, "/uploads/"),
+      picturePath,
       userPicturePath: user.picturePath,
     });
 
@@ -103,11 +89,6 @@ export const DELETE = async req => {
     const { postId, picturePath } = await req.json();
 
     await Post.findByIdAndDelete(postId);
-
-    const unlinkAsync = promisify(unlink); // Promisify the unlink function
-
-    const pictureFullPath = join(process.cwd(), "public", picturePath);
-    await unlinkAsync(pictureFullPath); // Use the promisified unlink function
 
     return NextResponse.json({ message: "Post deleted" }, { status: 200 });
   } catch (error) {

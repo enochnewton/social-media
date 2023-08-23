@@ -15,12 +15,12 @@ import React from "react";
 import Link from "next/link";
 import IconButton from "@mui/material/IconButton";
 import { Tooltip } from "@mui/material";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 
 const TabletSideDrawer = () => {
   const dispatch = useDispatch();
   const mode = useSelector(state => state.mode);
-  const { data: session } = useSession();
+  const user = useSelector(state => state.user);
 
   const handleMode = () => {
     dispatch(setMode());
@@ -37,9 +37,9 @@ const TabletSideDrawer = () => {
         >
           <Stack alignItems='center' my='16px'>
             <Avatar
-              alt='jane doe'
+              alt={user?.fullName}
               sx={{ width: "80px", height: "80px" }}
-              src={session?.user.image}
+              src={user?.picturePath}
             />
           </Stack>
         </Link>

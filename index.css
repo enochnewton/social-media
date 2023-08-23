@@ -1,6 +1,6 @@
 /* This will apply to all scrollbars in your application */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 3px;
 }
 
 ::-webkit-scrollbar-track {
