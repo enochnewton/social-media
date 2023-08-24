@@ -177,17 +177,15 @@ const Post = ({ myPosts = false, post, loggedInUser, user }) => {
     setLoading(false);
   };
 
+  console.log("post", post);
+
   return (
     <Stack sx={postContainerSx}>
       {/* top */}
       <Stack sx={postTopSx}>
         <Link
           style={{ textTransform: "none", textDecoration: "none" }}
-          href={`${
-            session?.user.email === user?.email
-              ? "/profile"
-              : `/profile/${post?.userId}`
-          }`}
+          href={`/profile/${post?.userId}`}
         >
           <Profile data={post} />
         </Link>
