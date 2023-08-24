@@ -29,7 +29,7 @@ export const getTimeAgoMsg = timestamp => {
   const diffSeconds = now.diff(time, "seconds");
 
   if (diffSeconds < 60) {
-    return `${diffSeconds} sec`;
+    return "just now";
   } else if (diffMinutes < 60) {
     return diffMinutes === 1
       ? `${diffMinutes} min ago`

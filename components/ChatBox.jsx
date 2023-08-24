@@ -15,13 +15,7 @@ import axios from "axios";
 import { pusherClient } from "@utils/pusher";
 import { find } from "lodash";
 
-const ChatBox = ({
-  recievedMsg,
-  user,
-  currentChat,
-  sendMessage,
-  setSendMessage,
-}) => {
+const ChatBox = ({ recievedMsg, user, currentChat }) => {
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const scroll = useRef();
@@ -68,10 +62,6 @@ const ChatBox = ({
       text: trimmedMessage,
       chatId: currentChat._id,
     };
-
-    // send message to socket
-    // const receiverId = currentChat.usersIds.find(id => id !== user._id);
-    // setSendMessage({ ...message, receiverId });
 
     try {
       const { data } = await axios.post("/api/messages", message);

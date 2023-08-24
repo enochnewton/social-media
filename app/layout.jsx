@@ -2,6 +2,7 @@ import { Merriweather } from "next/font/google";
 import Providers from "@components/Providers";
 import ResponsiveLayout from "@components/Layout";
 import "../index.css";
+import { Toaster } from "react-hot-toast";
 
 const merriWeather = Merriweather({
   subsets: ["latin"],
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
     <html lang='en'>
       <body className={merriWeather.className}>
         <Providers>
+          <Toaster />
           <ResponsiveLayout>{children}</ResponsiveLayout>
         </Providers>
       </body>

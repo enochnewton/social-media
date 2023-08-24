@@ -41,9 +41,11 @@ const Friends = () => {
     } else {
       return (
         <Stack sx={desktopSx}>
-          <Typography variant='h2' sx={pageHeadingsx}>
-            Friends
-          </Typography>
+          {isDesktop && (
+            <Typography variant='h2' sx={pageHeadingsx}>
+              Friends
+            </Typography>
+          )}
           <Typography variant='h3' sx={{ textAlign: "center" }}>
             You have no friends
           </Typography>

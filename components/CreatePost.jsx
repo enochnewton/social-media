@@ -23,20 +23,29 @@ import axios from "axios";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@utils/firebase";
 import { v4 } from "uuid";
+import { toast } from "react-hot-toast";
 
 const CreatePost = () => {
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
   const [post, setPost] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-
   const user = useSelector(state => state.user);
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(null);
 
   const handlePost = e => {
     e.preventDefault();
 
-    if (image === null) alert("Please select an image");
+    if (image === null) {
+      return toast.error("Please add an image", {
+        icon: "🔔",
+        duration: 4000,
+      });
+    }
+
+    setLoading(toast.loading("Creating post..."));
+    console.log({ loading });
+
     const formData = new FormData();
     formData.append("userId", user._id);
     post === ""
@@ -57,12 +66,30 @@ const CreatePost = () => {
           setPost("");
           setImage(null);
           setIsImage(prev => !prev);
+          toast("Post created", {
+            icon: "🔔",
+            duration: 5000,
+            actions: [
+              {
+                label: "Action",
+              },
+            ],
+          });
+          setLoading(toast.dismiss(loading));
         } catch (error) {
-          console.log(error);
+          toast.error("Something went wrong", {
+            icon: "🔔",
+            duration: 4000,
+          });
+          setLoading(toast.dismiss(loading));
         }
+
+        setLoading(false);
       });
     });
   };
+
+  console.log({ loading });
 
   return (
     <>
@@ -96,6 +123,7 @@ const CreatePost = () => {
               <InsertPhotoOutlinedIcon fontSize='large' />
             </IconButton>
             <CustomBtn
+              disabled={loading || typeof loading === "string"}
               name='Post'
               width='64px'
               height='32px'

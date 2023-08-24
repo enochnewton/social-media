@@ -52,6 +52,22 @@ export const PATCH = async (req, { params }) => {
     const receiver = await User.findById(friendRequest.receiverId).exec();
 
     if (status === "accepted") {
+      // check if the sender and the receiver are already friends
+      const senderIsFriend = sender.friends.find(
+        friend => friend._id.toString() === receiver._id.toString()
+      );
+
+      const receiverIsFriend = receiver.friends.find(
+        friend => friend._id.toString() === sender._id.toString()
+      );
+
+      // If the sender and the receiver are already friends, return a 400 error
+      if (senderIsFriend && receiverIsFriend)
+        return NextResponse.json(
+          { message: "You are already friends" },
+          { status: 400 }
+        );
+
       // Add the receiver to the sender's friends array
       sender.friends.push({
         _id: receiver._id,

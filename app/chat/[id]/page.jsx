@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
@@ -17,15 +17,12 @@ import axios from "axios";
 const IndividualChat = () => {
   const [currentChat, setCurrentChat] = useState(null);
   const [otherUser, setOtherUser] = useState(null);
-  const [sendMessage, setSendMessage] = useState(null);
   const [recievedMsg, setRecievedMsg] = useState(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { id: receiverId } = useParams();
   const userId = searchParams.get("userId");
-  const socket = useRef();
   const user = useSelector(state => state.user);
-  const online = useSelector(state => state.online);
 
   // find chat with other user
   useEffect(() => {
@@ -46,7 +43,6 @@ const IndividualChat = () => {
       const otherUserId = currentChat?.usersIds.find(
         userId => userId !== user._id
       );
-      console.log({ otherUserId, currentChat, userId });
       try {
         const { data } = await axios(`/api/user/find/${otherUserId}`);
         setOtherUser(data);
@@ -79,15 +75,6 @@ const IndividualChat = () => {
               <Typography variant='h5' fontWeight={700} color='text.primary'>
                 {otherUser?.fullName}
               </Typography>
-              <Typography variant='h6' color='text.secondary'>
-                {online ? (
-                  <Typography variant='subtitle1' color='green'>
-                    online
-                  </Typography>
-                ) : (
-                  "offline"
-                )}{" "}
-              </Typography>
             </Stack>
           </Stack>
           <MoreVertIcon fontSize='large' />
@@ -99,8 +86,6 @@ const IndividualChat = () => {
           currentChat={currentChat}
           user={user}
           recievedMsg={recievedMsg}
-          setSendMessage={setSendMessage}
-          sendMessage={sendMessage}
         />
       )}
     </>

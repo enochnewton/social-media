@@ -1,13 +1,21 @@
 "use client";
 import { useSelector } from "react-redux";
 import Post from "./Post";
+import Skeleton from "@mui/material/Skeleton";
 
 const PostWidget = ({ myPosts = false }) => {
   const user = useSelector(state => state.user);
   const posts = useSelector(state => state.posts);
 
   if (!posts || posts.length === 0) {
-    return <div>Loading posts...</div>; // You can replace this with a loading indicator or any other appropriate content
+    return (
+      <Skeleton
+        variant='rectangular'
+        sx={{ borderRadius: "16px" }}
+        height='447px'
+        animation='wave'
+      />
+    );
   }
 
   return (
@@ -17,6 +25,7 @@ const PostWidget = ({ myPosts = false }) => {
           key={post._id}
           myPosts={myPosts}
           post={post}
+          user={user}
           loggedInUser={user._id}
         />
       ))}

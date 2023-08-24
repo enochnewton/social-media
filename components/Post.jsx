@@ -59,13 +59,12 @@ const Profile = React.memo(
   }
 );
 
-const Post = ({ myPosts = false, post, loggedInUser }) => {
+const Post = ({ myPosts = false, post, loggedInUser, user }) => {
   const [commentsVisibility, setCommentsVisibility] = useState({});
   const [postComments, setPostComments] = useState({});
   const [comment, setComment] = useState("");
   const isLiked = Boolean(post.likes[loggedInUser]);
   const likeCount = Object.keys(post.likes).length;
-  const user = useSelector(state => state.user);
   const dispatch = useDispatch();
 
   const { data: session } = useSession();

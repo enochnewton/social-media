@@ -15,6 +15,7 @@ import {
 import { PersistGate } from "redux-persist/integration/react";
 import authReducer from "@state";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+import Spinner from "@components/Spinner";
 
 const createNoopStorage = () => {
   return {
@@ -64,7 +65,7 @@ const MyProvider = ({ children }) => {
   const persistor = persistStore(store);
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate loading={<Spinner />} persistor={persistor}>
         {children}
       </PersistGate>
     </Provider>

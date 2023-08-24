@@ -7,7 +7,6 @@ const initialState = {
   friends: [],
   friendRequests: [],
   currentChat: {},
-  online: false,
 };
 
 export const authSlice = createSlice({
@@ -65,9 +64,6 @@ export const authSlice = createSlice({
     setCurrentChat(state, action) {
       state.currentChat = action.payload;
     },
-    isOnline(state, action) {
-      state.online = action.payload;
-    },
   },
 });
 
@@ -81,6 +77,5 @@ export const {
   setFriends,
   setOtherUser,
   setCurrentChat,
-  isOnline,
 } = authSlice.actions;
 export default authSlice.reducer;

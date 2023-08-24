@@ -6,9 +6,9 @@ import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
 import { chatBoxSx } from "@utils/styles";
 import axios from "axios";
-import Badge from "@mui/material/Badge";
+import { Skeleton } from "@mui/material";
 
-const ChatComponent = React.memo(({ chat, otherUserId, online }) => {
+const ChatComponent = React.memo(({ chat, otherUserId }) => {
   const [otherUser, setOtherUser] = useState(null);
 
   useEffect(() => {
@@ -25,50 +25,31 @@ const ChatComponent = React.memo(({ chat, otherUserId, online }) => {
     fetchOtherUser();
   }, [chat]);
 
+  if (otherUser === null)
+    return (
+      <Skeleton
+        variant='rectangular'
+        animation='pulse'
+        sx={{ height: "60px", width: "100%" }}
+      />
+    );
+
   return (
     <Box component='article' sx={chatBoxSx}>
       {/* profile */}
       <Stack direction='row' alignItems='center' gap={2}>
-        {online ? (
-          <Badge
-            overlap='circular'
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            variant='dot'
-            sx={{ ".MuiBadge-dot": { bgcolor: "success.main" } }}
-          >
-            <Avatar
-              src={otherUser?.picturePath}
-              alt={otherUser?.fullName}
-              sx={{ width: "50px", height: "50px" }}
-            />
-          </Badge>
-        ) : (
-          <Avatar
-            src={otherUser?.picturePath}
-            alt={otherUser?.fullName}
-            sx={{ width: "50px", height: "50px" }}
-          />
-        )}
+        <Avatar
+          src={otherUser?.picturePath}
+          alt={otherUser?.fullName}
+          sx={{ width: "50px", height: "50px" }}
+        />
 
         <Stack direction='column' alignItems='flex-start' gap={1}>
           <Typography variant='h5' fontWeight={400} color='text.primary'>
             {otherUser?.fullName}
           </Typography>
-          {online ? (
-            <Typography variant='subtitle1' color='green'>
-              online
-            </Typography>
-          ) : (
-            <Typography variant='h6' color='text.secondary'>
-              offline
-            </Typography>
-          )}
         </Stack>
       </Stack>
-
-      <Typography variant='h6' color='text.primary'>
-        {chat.time}
-      </Typography>
     </Box>
   );
 });

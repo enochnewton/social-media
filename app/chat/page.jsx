@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import { desktopSx } from "@utils/styles";
 import ChatComponent from "@components/Chat";
@@ -8,14 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import Link from "next/link";
 import Divider from "@mui/material/Divider";
-import { isOnline } from "@state";
 
 const Chat = () => {
   const [chats, setChats] = useState([]);
-  const [onlineUsers, setOnlineUsers] = useState([]);
-
   const user = useSelector(state => state.user);
-  const socket = useRef();
   const dispatch = useDispatch();
 
   // fetch chats from db
@@ -32,13 +28,6 @@ const Chat = () => {
     if (user._id) fetchChats();
   }, [user._id]);
 
-  const checkOnlineStatus = chat => {
-    const chatMember = chat.usersIds.find(member => member !== user._id);
-    const online = onlineUsers.find(user => user.userId === chatMember);
-    dispatch(isOnline(online ? true : false));
-    return online ? true : false;
-  };
-
   return (
     <Stack sx={desktopSx}>
       {chats.map(chat => {
@@ -52,7 +41,6 @@ const Chat = () => {
             <ChatComponent
               chat={chat}
               otherUserId={otherUserId}
-              online={checkOnlineStatus(chat)}
               currentUserId={user._id}
             />
             <Divider sx={{ color: "button.main" }} />

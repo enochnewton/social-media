@@ -14,7 +14,7 @@ import PostWidget from "./PostWidget";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "@state";
 import axios from "axios";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 
 const Profile = React.memo(({ userProfile, id }) => {
   const { data: session } = useSession();
