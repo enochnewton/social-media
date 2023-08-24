@@ -61,7 +61,7 @@ const IndividualChat = () => {
           <IconButton
             sx={{ flex: "1" }}
             aria-label=''
-            onClick={() => router.back()}
+            onClick={() => router.push("/chat")}
           >
             <ArrowBack />
           </IconButton>

@@ -44,7 +44,6 @@ const CreatePost = () => {
     }
 
     setLoading(toast.loading("Creating post..."));
-    console.log({ loading });
 
     const formData = new FormData();
     formData.append("userId", user._id);
@@ -66,6 +65,7 @@ const CreatePost = () => {
           setPost("");
           setImage(null);
           setIsImage(prev => !prev);
+          setLoading(toast.dismiss(loading));
           toast("Post created", {
             icon: "🔔",
             duration: 5000,
@@ -75,21 +75,18 @@ const CreatePost = () => {
               },
             ],
           });
-          setLoading(toast.dismiss(loading));
         } catch (error) {
+          setLoading(toast.dismiss(loading));
           toast.error("Something went wrong", {
             icon: "🔔",
             duration: 4000,
           });
-          setLoading(toast.dismiss(loading));
         }
 
         setLoading(false);
       });
     });
   };
-
-  console.log({ loading });
 
   return (
     <>

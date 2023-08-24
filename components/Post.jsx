@@ -31,11 +31,12 @@ import { useSession } from "next-auth/react";
 import TextField from "@mui/material/TextField";
 import CustomBtn from "@components/Button";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { deletePost, setPost } from "@state";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { deleteObject, ref } from "firebase/storage";
 import { storage } from "@utils/firebase";
+import { toast } from "react-hot-toast";
 
 const Profile = React.memo(
   ({ data, width = "30px", height = "30px", isComment }) => {
@@ -66,6 +67,7 @@ const Post = ({ myPosts = false, post, loggedInUser, user }) => {
   const isLiked = Boolean(post.likes[loggedInUser]);
   const likeCount = Object.keys(post.likes).length;
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(null);
 
   const { data: session } = useSession();
   const toggleComments = postId => {
@@ -140,15 +142,19 @@ const Post = ({ myPosts = false, post, loggedInUser, user }) => {
 
   const handleDeletePost = async () => {
     // delete post from firebase
+    setLoading(toast.loading("deleting post..."));
+
     const fileRef = ref(storage, post.picturePath);
 
     try {
       await deleteObject(fileRef);
-      console.log("File deleted successfully");
     } catch (error) {
+      setLoading(toast.dismiss(loading));
+
+      toast.error("Something went wrong");
       console.log("Error deleting file:", error);
     }
-
+    setLoading(false);
     try {
       await axios.delete(`/api/post`, {
         data: {
@@ -156,11 +162,19 @@ const Post = ({ myPosts = false, post, loggedInUser, user }) => {
           picturePath: post.picturePath,
         },
       });
+      setLoading(toast.dismiss(loading));
+      toast("Post Deleted", {
+        icon: "🔔",
+        duration: 4000,
+      });
 
       dispatch(deletePost(post._id));
     } catch (error) {
       console.log(error);
+      setLoading(toast.dismiss(loading));
+      toast.error("Something went wrong");
     }
+    setLoading(false);
   };
 
   return (
@@ -178,7 +192,11 @@ const Post = ({ myPosts = false, post, loggedInUser, user }) => {
           <Profile data={post} />
         </Link>
         {myPosts && (
-          <IconButton onClick={handleDeletePost} aria-label='add'>
+          <IconButton
+            disabled={loading || typeof loading === "string"}
+            onClick={handleDeletePost}
+            aria-label='add'
+          >
             <Tooltip title='delete' arrow>
               <DeleteOutlineIcon sx={{ color: "error.main" }} />
             </Tooltip>
