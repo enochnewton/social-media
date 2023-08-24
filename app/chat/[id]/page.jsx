@@ -40,7 +40,6 @@ const IndividualChat = () => {
 
     findChat();
   }, []);
-  console.log({ userId, receiverId, currentChat });
 
   useEffect(() => {
     const findOtherUser = async () => {

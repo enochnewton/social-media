@@ -70,12 +70,15 @@ const ChatBox = ({
     };
 
     // send message to socket
-    const receiverId = currentChat.usersIds.find(id => id !== user._id);
-    setSendMessage({ ...message, receiverId });
+    // const receiverId = currentChat.usersIds.find(id => id !== user._id);
+    // setSendMessage({ ...message, receiverId });
 
     try {
       const { data } = await axios.post("/api/messages", message);
-      setMessages(prev => [...prev, data]);
+      setMessages(prev => {
+        if (find(prev, { _id: data._id })) return prev;
+        return [...prev, data];
+      });
       setNewMessage("");
     } catch (error) {
       console.log(error);
