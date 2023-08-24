@@ -35,7 +35,7 @@ const UserProfileComponent = () => {
             {user?.fullName}
           </Typography>
           <Typography variant='body1' color='text.secondary'>
-            @{user?.email.split("@")[0]}
+            @{user?.email?.split("@")[0]}
           </Typography>
         </Stack>
       </Stack>
