@@ -28,13 +28,11 @@ const IndividualChat = () => {
   const online = useSelector(state => state.online);
 
   // find chat with other user
-  console.log({ userId, receiverId });
   useEffect(() => {
     const findChat = async () => {
       try {
         const { data } = await axios(`/api/chat/find/${userId}/${receiverId}`);
         setCurrentChat(data);
-        console.log({ userId, receiverId, data });
       } catch (error) {
         console.log(error);
       }

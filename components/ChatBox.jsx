@@ -88,7 +88,7 @@ const ChatBox = ({
 
     const messageHandler = message => {
       setMessages(prev => {
-        // if (prev._id === message._id) return prev;
+        if (find(prev, { _id: message._id })) return prev;
         return [...prev, message];
       });
     };

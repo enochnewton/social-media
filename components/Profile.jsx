@@ -98,17 +98,17 @@ const Profile = React.memo(({ userProfile, id }) => {
                     color='text.primary'
                     fontWeight='600'
                   >
-                    {session?.user.name
-                      .split(" ")
-                      .map(
+                    {session?.user?.name
+                      ?.split(" ")
+                      ?.map(
                         name =>
                           name.charAt(0).toUpperCase() +
                           name.slice(1).toLowerCase()
                       )
-                      .join(" ")}
+                      ?.join(" ")}
                   </Typography>
                   <Typography variant='body1' color='text.secondary'>
-                    @{session?.user.email.split("@")[0]}
+                    @{session?.user?.email?.split("@")[0]}
                   </Typography>
                 </Stack>
               </>
