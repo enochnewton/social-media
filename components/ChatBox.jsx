@@ -12,6 +12,8 @@ import { Box } from "@mui/material";
 import { chatSenderSx, chatStacksx } from "@utils/styles";
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
+import { pusherClient } from "@utils/pusher";
+import { find } from "lodash";
 
 const ChatBox = ({
   recievedMsg,
@@ -79,6 +81,25 @@ const ChatBox = ({
       console.log(error);
     }
   };
+
+  // subscribe to pusher channel
+  useEffect(() => {
+    pusherClient.subscribe(currentChat?._id);
+
+    const messageHandler = message => {
+      setMessages(prev => {
+        // if (prev._id === message._id) return prev;
+        return [...prev, message];
+      });
+    };
+
+    pusherClient.bind("new:message", messageHandler);
+
+    return () => {
+      pusherClient.unsubscribe(currentChat?._id);
+      pusherClient.unbind("new:message", messageHandler);
+    };
+  }, [currentChat._id]);
 
   return (
     <Container sx={{ mt: "80px" }}>

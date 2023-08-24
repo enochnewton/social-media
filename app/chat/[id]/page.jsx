@@ -12,7 +12,6 @@ import { useSelector } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { io } from "socket.io-client";
 import axios from "axios";
 
 const IndividualChat = () => {
@@ -29,11 +28,13 @@ const IndividualChat = () => {
   const online = useSelector(state => state.online);
 
   // find chat with other user
+  console.log({ userId, receiverId });
   useEffect(() => {
     const findChat = async () => {
       try {
         const { data } = await axios(`/api/chat/find/${userId}/${receiverId}`);
         setCurrentChat(data);
+        console.log({ userId, receiverId, data });
       } catch (error) {
         console.log(error);
       }
@@ -41,12 +42,14 @@ const IndividualChat = () => {
 
     findChat();
   }, []);
+  console.log({ userId, receiverId, currentChat });
 
   useEffect(() => {
     const findOtherUser = async () => {
       const otherUserId = currentChat?.usersIds.find(
         userId => userId !== user._id
       );
+      console.log({ otherUserId, currentChat, userId });
       try {
         const { data } = await axios(`/api/user/find/${otherUserId}`);
         setOtherUser(data);
@@ -54,23 +57,8 @@ const IndividualChat = () => {
         console.log(error);
       }
     };
-    if (currentChat?.usersIds?.length !== 0) findOtherUser();
+    if (currentChat !== null) findOtherUser();
   }, [currentChat]);
-
-  useEffect(() => {
-    socket.current = io("http://localhost:8800");
-    socket.current.emit("new-user-add", user._id);
-
-    socket.current.on("recieve-message", data => {
-      setRecievedMsg(data);
-    });
-  }, [user._id]);
-
-  // send message to socket server
-  useEffect(() => {
-    if (sendMessage === null) return;
-    socket.current.emit("send-message", sendMessage);
-  }, [sendMessage]);
 
   return (
     <>
@@ -109,13 +97,15 @@ const IndividualChat = () => {
         </Box>
       </Stack>
       {/* chat containers */}
-      <ChatBox
-        currentChat={currentChat}
-        user={user}
-        recievedMsg={recievedMsg}
-        setSendMessage={setSendMessage}
-        sendMessage={sendMessage}
-      />
+      {currentChat !== null && (
+        <ChatBox
+          currentChat={currentChat}
+          user={user}
+          recievedMsg={recievedMsg}
+          setSendMessage={setSendMessage}
+          sendMessage={sendMessage}
+        />
+      )}
     </>
   );
 };

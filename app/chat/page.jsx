@@ -9,7 +9,6 @@ import axios from "axios";
 import Link from "next/link";
 import Divider from "@mui/material/Divider";
 import { isOnline } from "@state";
-import { io } from "socket.io-client";
 
 const Chat = () => {
   const [chats, setChats] = useState([]);
@@ -31,15 +30,6 @@ const Chat = () => {
     };
 
     if (user._id) fetchChats();
-  }, [user._id]);
-
-  // connect and add user to socket server and get all users
-  useEffect(() => {
-    socket.current = io("http://localhost:8800");
-    socket.current.emit("new-user-add", user._id);
-    socket.current.on("get-users", users => {
-      setOnlineUsers(users);
-    });
   }, [user._id]);
 
   const checkOnlineStatus = chat => {
