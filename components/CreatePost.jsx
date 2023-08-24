@@ -78,7 +78,7 @@ const CreatePost = () => {
             autoComplete='off'
             value={post}
             placeholder={`What's on your mind, ${
-              user?.fullName.split(" ")[0]
+              user?.fullName?.split(" ")[0]
             }?`}
             fullWidth
             sx={{

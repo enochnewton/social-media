@@ -299,14 +299,14 @@ const Post = ({ myPosts = false, post, loggedInUser }) => {
             >
               <Avatar
                 sx={{ width: "28px", height: "28px" }}
-                src={session?.user.image}
-                alt={session?.user.name}
+                src={user?.picturePath}
+                alt={user.name}
               />
               <TextField
                 value={comment}
                 onChange={e => setComment(e.target.value)}
                 placeholder={`What's on your mind, ${
-                  session?.user.name.split(" ")[0]
+                  user?.fullName?.split(" ")[0]
                 }?`}
                 fullWidth
                 sx={{
