@@ -24,16 +24,19 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "@utils/firebase";
 import { v4 } from "uuid";
 import { toast } from "react-hot-toast";
+import { useCreatePost } from "@hooks/usePost";
 
 const CreatePost = () => {
   const [isImage, setIsImage] = useState(false);
   const [image, setImage] = useState(null);
   const [post, setPost] = useState("");
-  const user = useSelector(state => state.user);
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(null);
 
-  const handlePost = e => {
+  const { mutate: createPost } = useCreatePost();
+
+  const handlePost = (e) => {
     e.preventDefault();
 
     if (image === null) {
@@ -55,33 +58,37 @@ const CreatePost = () => {
 
     // firebase storage
     const imageRef = ref(storage, `images/${image.name + v4()}`);
-    uploadBytes(imageRef, image).then(snapshot => {
-      getDownloadURL(snapshot.ref).then(async url => {
+    uploadBytes(imageRef, image).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then(async (url) => {
         formData.append("picturePath", url);
 
-        try {
-          const response = await axios.post("/api/post", formData);
-          dispatch(setPosts(response.data));
-          setPost("");
-          setImage(null);
-          setIsImage(prev => !prev);
-          setLoading(toast.dismiss(loading));
-          toast("Post created", {
-            icon: "🔔",
-            duration: 5000,
-            actions: [
-              {
-                label: "Action",
-              },
-            ],
-          });
-        } catch (error) {
-          setLoading(toast.dismiss(loading));
-          toast.error("Something went wrong", {
-            icon: "🔔",
-            duration: 4000,
-          });
-        }
+        //send data to hook
+        createPost(formData, {
+          onSuccess: (data) => {
+            dispatch(setPosts(data.data));
+            setPost("");
+            setImage(null);
+            setIsImage((prev) => !prev);
+            setLoading(toast.dismiss(loading));
+            console.log(loading);
+            toast("Post created", {
+              icon: "🔔",
+              duration: 5000,
+              actions: [
+                {
+                  label: "Action",
+                },
+              ],
+            });
+          },
+          onError: () => {
+            setLoading(toast.dismiss(loading));
+            toast.error("Something went wrong", {
+              icon: "🔔",
+              duration: 4000,
+            });
+          },
+        });
 
         setLoading(false);
       });
@@ -98,7 +105,7 @@ const CreatePost = () => {
             alt={user?.fullName}
           />
           <TextField
-            onChange={e => setPost(e.target.value)}
+            onChange={(e) => setPost(e.target.value)}
             autoComplete='off'
             value={post}
             placeholder={`What's on your mind, ${
@@ -137,7 +144,7 @@ const CreatePost = () => {
           <Dropzone
             acceptedfiles={["image/*"]}
             multiple={false}
-            onDrop={acceptedFiles => {
+            onDrop={(acceptedFiles) => {
               setImage(acceptedFiles[0]);
             }}
           >

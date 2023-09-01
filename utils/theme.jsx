@@ -58,7 +58,7 @@ const colorTokens = {
   },
 };
 
-const themeSettings = mode => {
+const themeSettings = (mode) => {
   return {
     palette: {
       mode,
@@ -196,9 +196,8 @@ const themeSettings = mode => {
 };
 
 export default function ThemeRegistry({ children }) {
-  const mode = useSelector(state => state.mode);
+  const mode = useSelector((state) => state.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
-  console.log(mode);
 
   return (
     <NextAppDirEmotionCacheProvider options={{ key: "mui" }}>

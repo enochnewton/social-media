@@ -27,16 +27,20 @@ import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
-import { useSession } from "next-auth/react";
 import TextField from "@mui/material/TextField";
 import CustomBtn from "@components/Button";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { deletePost, setPost } from "@state";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { deleteObject, ref } from "firebase/storage";
 import { storage } from "@utils/firebase";
 import { toast } from "react-hot-toast";
+import {
+  useDeletePost,
+  useLikeComment,
+  useLikePost,
+  usePostComment,
+} from "@hooks/usePost";
 
 const Profile = React.memo(
   ({ data, width = "30px", height = "30px", isComment }) => {
@@ -69,17 +73,16 @@ const Post = ({ myPosts = false, post, loggedInUser, user }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(null);
 
-  const { data: session } = useSession();
-  const toggleComments = postId => {
-    setCommentsVisibility(prevVisibility => {
+  const toggleComments = (postId) => {
+    setCommentsVisibility((prevVisibility) => {
       return {
         ...prevVisibility,
         [postId]: !prevVisibility[postId],
       };
     });
   };
-  const togglePostComments = postId => {
-    setPostComments(prevVisibility => {
+  const togglePostComments = (postId) => {
+    setPostComments((prevVisibility) => {
       return {
         ...prevVisibility,
         [postId]: !prevVisibility[postId],
@@ -87,58 +90,68 @@ const Post = ({ myPosts = false, post, loggedInUser, user }) => {
     });
   };
 
-  const likePost = async () => {
-    try {
-      const { data } = await axios.patch(`/api/post`, {
-        postId: post._id,
-        userId: loggedInUser,
-      });
-      dispatch(setPost(data));
-    } catch (error) {
-      console.log(error);
-    }
+  // liking a post
+  const { mutate: likePost } = useLikePost();
+
+  const handleLikePost = () => {
+    likePost({
+      postId: post._id,
+      userId: loggedInUser,
+    });
   };
 
-  const postComment = async e => {
+  // posting a comment
+  const { mutate: postComment } = usePostComment();
+
+  const handlePostComment = (e) => {
     e.preventDefault();
+
     if (comment === "") return alert("Please enter a comment");
-    try {
-      const { data } = await axios.post(`/api/post/${loggedInUser}`, {
+
+    postComment(
+      {
         postId: post._id,
-        text: comment,
-      });
-      setComment("");
-      dispatch(setPost(data));
-      //  after posting comment, close the comment box
-      setPostComments(prevVisibility => {
-        return {
-          ...prevVisibility,
-          [post._id]: false,
-        };
-      });
-      // after posting comment, open the comments box
-      setCommentsVisibility(prevVisibility => {
-        return {
-          ...prevVisibility,
-          [post._id]: true,
-        };
-      });
-    } catch (error) {
-      console.log(error);
-    }
+        comment,
+        loggedInUser,
+      },
+      {
+        onSuccess: () => {
+          setComment("");
+          //  after posting comment, close the comment box
+          setPostComments((prevVisibility) => {
+            return {
+              ...prevVisibility,
+              [post._id]: false,
+            };
+          });
+          // after posting comment, open the comments box
+          setCommentsVisibility((prevVisibility) => {
+            return {
+              ...prevVisibility,
+              [post._id]: true,
+            };
+          });
+        },
+        onError: (error) => {
+          console.log(error);
+        },
+      }
+    );
   };
 
-  const handleLikeComment = async commentId => {
-    try {
-      const { data } = await axios.patch(`/api/post/${loggedInUser}`, {
-        postId: post._id,
-        commentId,
-      });
-      dispatch(setPost(data));
-    } catch (error) {
-      console.log(error);
-    }
+  // liking a comment
+  const { mutate: likeComment } = useLikeComment();
+
+  const handleLikeComment = (commentId) => {
+    likeComment({
+      postId: post._id,
+      commentId,
+      loggedInUser,
+    });
   };
+
+  // deleting a post
+  const { mutate: deletingPost } = useDeletePost();
 
   const handleDeletePost = async () => {
     // delete post from firebase
@@ -155,29 +168,32 @@ const Post = ({ myPosts = false, post, loggedInUser, user }) => {
       console.log("Error deleting file:", error);
     }
     setLoading(false);
-    try {
-      await axios.delete(`/api/post`, {
-        data: {
-          postId: post._id,
-          picturePath: post.picturePath,
-        },
-      });
-      setLoading(toast.dismiss(loading));
-      toast("Post Deleted", {
-        icon: "🔔",
-        duration: 4000,
-      });
 
-      dispatch(deletePost(post._id));
-    } catch (error) {
-      console.log(error);
-      setLoading(toast.dismiss(loading));
-      toast.error("Something went wrong");
-    }
+    deletingPost(
+      {
+        postId: post._id,
+        picturePath: post.picturePath,
+      },
+      {
+        onSuccess: () => {
+          setLoading(toast.dismiss(loading));
+          toast("Post Deleted", {
+            icon: "🔔",
+            duration: 4000,
+          });
+
+          dispatch(deletePost(post._id));
+        },
+        onError: (error) => {
+          console.log(error);
+          setLoading(toast.dismiss(loading));
+          toast.error("Something went wrong");
+        },
+      }
+    );
+
     setLoading(false);
   };
-
-  console.log("post", post);
 
   return (
     <Stack sx={postContainerSx}>
@@ -213,7 +229,7 @@ const Post = ({ myPosts = false, post, loggedInUser, user }) => {
       {/* icons */}
       <Stack sx={postIconsSx}>
         <Stack sx={postIconsInnerSx}>
-          <IconButton onClick={likePost}>
+          <IconButton onClick={handleLikePost}>
             {isLiked ? (
               <FavoriteIcon sx={{ color: "error.main" }} />
             ) : (
@@ -259,7 +275,7 @@ const Post = ({ myPosts = false, post, loggedInUser, user }) => {
         {commentsVisibility[post._id] && (
           <Box width='100%' onClose={() => toggleComments(post.id)}>
             <Stack
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
               }}
               sx={{ maxHeight: "150px", overflow: "auto", width: "100%" }}
@@ -270,7 +286,7 @@ const Post = ({ myPosts = false, post, loggedInUser, user }) => {
                     const isCommentLiked = comment.likes[loggedInUser] || false;
                     const commentLikeCount = Object.values(
                       comment.likes
-                    ).filter(liked => liked).length;
+                    ).filter((liked) => liked).length;
 
                     return (
                       <React.Fragment key={comment._id}>
@@ -306,7 +322,7 @@ const Post = ({ myPosts = false, post, loggedInUser, user }) => {
           <Stack
             autoComplete='off'
             component='form'
-            onSubmit={postComment}
+            onSubmit={handlePostComment}
             sx={postCommentSx}
           >
             <Stack
@@ -319,7 +335,7 @@ const Post = ({ myPosts = false, post, loggedInUser, user }) => {
               />
               <TextField
                 value={comment}
-                onChange={e => setComment(e.target.value)}
+                onChange={(e) => setComment(e.target.value)}
                 placeholder={`What's on your mind, ${
                   user?.fullName?.split(" ")[0]
                 }?`}

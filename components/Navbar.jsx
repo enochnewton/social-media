@@ -29,8 +29,7 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { Tooltip } from "@mui/material";
 import UserProfileComponent from "./UserProfileComponent";
-import axios from "axios";
-import { redirect } from "next/navigation";
+import { useFindUser } from "@hooks/useUser";
 
 const Navbar = () => {
   const isDesktop = useMediaQuery("(min-width:900px)");
@@ -38,24 +37,20 @@ const Navbar = () => {
   const { data: session } = useSession();
 
   const dispatch = useDispatch();
-  const mode = useSelector(state => state.mode);
+  const mode = useSelector((state) => state.mode);
   const drawerWidth = 300;
 
+  const email = session?.user.email;
+
+  const { data } = useFindUser(email);
+
   useEffect(() => {
-    const findUser = async () => {
-      try {
-        const user = await axios.get(`/api/user/${session?.user.email}`);
-        dispatch(setUser(user.data));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    if (session) findUser();
-  }, [session?.user.email]);
-
+    if (data) {
+      dispatch(setUser(data));
+    }
+  }, [data]);
   const handleDrawerToggle = () => {
-    setMenuOpen(prev => !prev);
+    setMenuOpen((prev) => !prev);
   };
 
   const handleMode = () => {
@@ -161,7 +156,7 @@ const Navbar = () => {
             {/* profile component */}
             <UserProfileComponent />
             <List sx={{ mb: { md: "64px" } }}>
-              {navItems.map(item => (
+              {navItems.map((item) => (
                 <Link
                   style={{ textTransform: "none", textDecoration: "none" }}
                   href={item.link}

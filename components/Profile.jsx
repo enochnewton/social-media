@@ -15,11 +15,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "@state";
 import axios from "axios";
 import Box from "@mui/material/Box";
+import { useGetPostsByUserId } from "@hooks/usePost";
 
 const Profile = React.memo(({ userProfile, id }) => {
   const { data: session } = useSession();
   const dispatch = useDispatch();
-  const user = useSelector(state => state.user);
+  const user = useSelector((state) => state.user);
   const [viewedUser, setViewedUser] = useState({});
 
   const findUser = async () => {
@@ -40,13 +41,10 @@ const Profile = React.memo(({ userProfile, id }) => {
     }
   };
 
-  const getUserPosts = async () => {
-    try {
-      const { data } = await axios(`/api/post/${id}`);
-      dispatch(setPosts(data));
-    } catch (error) {
-      console.log(error);
-    }
+  const { data } = useGetPostsByUserId(user._id);
+
+  const getUserPosts = () => {
+    dispatch(setPosts(data));
   };
 
   useEffect(() => {
@@ -101,7 +99,7 @@ const Profile = React.memo(({ userProfile, id }) => {
                     {session?.user?.name
                       ?.split(" ")
                       ?.map(
-                        name =>
+                        (name) =>
                           name.charAt(0).toUpperCase() +
                           name.slice(1).toLowerCase()
                       )

@@ -5,10 +5,10 @@ import Skeleton from "@mui/material/Skeleton";
 import { Typography } from "@mui/material";
 
 const PostWidget = ({ myPosts = false }) => {
-  const user = useSelector(state => state.user);
-  const posts = useSelector(state => state.posts);
+  const user = useSelector((state) => state.user);
+  const posts = useSelector((state) => state.posts);
 
-  if (myPosts && posts.length === 0) {
+  if (myPosts && posts?.length === 0) {
     return (
       <Typography variant='h6' sx={{ textAlign: "center", mt: "20px" }}>
         You have no posts yet
@@ -16,7 +16,7 @@ const PostWidget = ({ myPosts = false }) => {
     );
   }
 
-  if (!posts || posts.length === 0) {
+  if (!posts || posts?.length === 0) {
     return (
       <Skeleton
         variant='rectangular'
@@ -29,7 +29,7 @@ const PostWidget = ({ myPosts = false }) => {
 
   return (
     <>
-      {posts?.map(post => (
+      {posts?.map((post) => (
         <Post
           key={post._id}
           myPosts={myPosts}

@@ -1,5 +1,6 @@
 import User from "@models/User";
 import { connectToDB } from "@utils/database";
+import mongoose from "mongoose";
 
 export const GET = async (req, { params }) => {
   try {

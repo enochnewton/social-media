@@ -3,7 +3,7 @@ import User from "@models/User";
 import { connectToDB } from "@utils/database";
 import { NextResponse } from "next/server";
 
-export const POST = async req => {
+export const POST = async (req) => {
   const { userId, description, picturePath, email } = Object.fromEntries(
     await req.formData()
   );
@@ -37,7 +37,7 @@ export const POST = async req => {
   }
 };
 
-export const GET = async req => {
+export const GET = async (req) => {
   try {
     await connectToDB();
 
@@ -46,7 +46,7 @@ export const GET = async req => {
       "picturePath fullName"
     );
 
-    return NextResponse.json(posts, { status: 200 });
+    return NextResponse.json(posts.reverse(), { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
@@ -54,7 +54,7 @@ export const GET = async req => {
 
 // like or dislike a post
 
-export const PATCH = async req => {
+export const PATCH = async (req) => {
   try {
     await connectToDB();
 
@@ -82,7 +82,7 @@ export const PATCH = async req => {
   }
 };
 
-export const DELETE = async req => {
+export const DELETE = async (req) => {
   try {
     await connectToDB();
 

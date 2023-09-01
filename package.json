@@ -34,6 +34,7 @@
     "react-dropzone": "^14.2.3",
     "react-hot-toast": "^2.4.1",
     "react-input-emoji": "^5.1.1",
+    "react-query": "^3.39.3",
     "react-redux": "^8.1.1",
     "react-spinners": "^0.13.8",
     "redux-persist": "^6.0.0",

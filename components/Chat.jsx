@@ -7,23 +7,10 @@ import React, { useEffect, useState } from "react";
 import { chatBoxSx } from "@utils/styles";
 import axios from "axios";
 import { Skeleton } from "@mui/material";
+import { useFetchOtherUser } from "@hooks/useUser";
 
 const ChatComponent = React.memo(({ chat, otherUserId }) => {
-  const [otherUser, setOtherUser] = useState(null);
-
-  useEffect(() => {
-    // find the other user in the db
-    const fetchOtherUser = async () => {
-      try {
-        const { data } = await axios(`/api/user/find/${otherUserId}`);
-        setOtherUser(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchOtherUser();
-  }, [chat]);
+  const { data: otherUser } = useFetchOtherUser(otherUserId);
 
   if (otherUser === null)
     return (

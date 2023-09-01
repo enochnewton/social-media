@@ -14,34 +14,31 @@ import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
 import { pusherClient } from "@utils/pusher";
 import { find } from "lodash";
+import { useFetchMessages } from "@hooks/useUser";
+import { useSendMessage } from "@hooks/useChat";
 
 const ChatBox = ({ recievedMsg, user, currentChat }) => {
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const scroll = useRef();
 
-  const handleChange = newMessage => {
+  const handleChange = (newMessage) => {
     setNewMessage(newMessage);
   };
 
   // fetch messages from db
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const { data } = await axios(`/api/messages/${currentChat._id}`);
-        setMessages(prev => [...prev, ...data]);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const { data: messagesData, status } = useFetchMessages(currentChat?._id);
 
-    if (currentChat?._id) fetchMessages();
-  }, [currentChat]);
+  useEffect(() => {
+    if (status === "success") {
+      setMessages((prev) => [...prev, ...messagesData]);
+    }
+  }, [status]);
 
   // add the received message to the messages array
   useEffect(() => {
     if (recievedMsg !== null && recievedMsg.chatId === currentChat._id) {
-      setMessages(prevMessages => [...prevMessages, recievedMsg]);
+      setMessages((prevMessages) => [...prevMessages, recievedMsg]);
     }
   }, [recievedMsg]);
 
@@ -50,7 +47,10 @@ const ChatBox = ({ recievedMsg, user, currentChat }) => {
     scroll.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSendMsg = async e => {
+  // send message
+  const { mutate: sendMessage } = useSendMessage();
+
+  const handleSendMsg = async (e) => {
     e.preventDefault();
 
     // trim the message
@@ -63,24 +63,27 @@ const ChatBox = ({ recievedMsg, user, currentChat }) => {
       chatId: currentChat._id,
     };
 
-    try {
-      const { data } = await axios.post("/api/messages", message);
-      setMessages(prev => {
-        if (find(prev, { _id: data._id })) return prev;
-        return [...prev, data];
-      });
-      setNewMessage("");
-    } catch (error) {
-      console.log(error);
-    }
+    // send message to react-query
+    sendMessage(message, {
+      onSuccess: (data) => {
+        setMessages((prev) => {
+          if (find(prev, { _id: data.data._id })) return prev;
+          return [...prev, data.data];
+        });
+        setNewMessage("");
+      },
+      onError(error) {
+        console.log(error);
+      },
+    });
   };
 
   // subscribe to pusher channel
   useEffect(() => {
-    pusherClient.subscribe(currentChat?._id);
+    pusherClient?.subscribe(currentChat?._id);
 
-    const messageHandler = message => {
-      setMessages(prev => {
+    const messageHandler = (message) => {
+      setMessages((prev) => {
         if (find(prev, { _id: message._id })) return prev;
         return [...prev, message];
       });

@@ -13,45 +13,37 @@ import IconButton from "@mui/material/IconButton";
 import ArrowBack from "@mui/icons-material/ArrowBack";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
+import { useFindChat } from "@hooks/useChat";
+import { useFetchOtherUser } from "@hooks/useUser";
 
 const IndividualChat = () => {
   const [currentChat, setCurrentChat] = useState(null);
-  const [otherUser, setOtherUser] = useState(null);
+  const [otherUserId, setOtherUserId] = useState(null);
   const [recievedMsg, setRecievedMsg] = useState(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { id: receiverId } = useParams();
   const userId = searchParams.get("userId");
-  const user = useSelector(state => state.user);
+  const user = useSelector((state) => state.user);
 
-  // find chat with other user
-  useEffect(() => {
-    const findChat = async () => {
-      try {
-        const { data } = await axios(`/api/chat/find/${userId}/${receiverId}`);
-        setCurrentChat(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    findChat();
-  }, []);
+  const { data, status } = useFindChat(userId, receiverId);
 
   useEffect(() => {
-    const findOtherUser = async () => {
-      const otherUserId = currentChat?.usersIds.find(
-        userId => userId !== user._id
+    if (status === "success") {
+      setCurrentChat(data.data);
+    }
+  }, [status]);
+
+  useEffect(() => {
+    if (currentChat !== null) {
+      const otherUserId = currentChat.usersIds.find(
+        (userId) => userId !== user._id
       );
-      try {
-        const { data } = await axios(`/api/user/find/${otherUserId}`);
-        setOtherUser(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    if (currentChat !== null) findOtherUser();
+      setOtherUserId(otherUserId);
+    }
   }, [currentChat]);
+
+  const { data: otherUser } = useFetchOtherUser(otherUserId);
 
   return (
     <>
