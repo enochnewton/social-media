@@ -33,3 +33,14 @@ export const useFetchMessages = (chatId) => {
     onError: (error) => console.log(error),
   });
 };
+
+// get all users
+const getAllUsers = (userId) => axios(`/api/friendreq/${userId}`);
+
+export const useGetAllUsers = (userId) => {
+  return useQuery(["users", userId], () => getAllUsers(userId), {
+    select: (data) => data.data,
+    enabled: !!userId,
+    onError: (error) => console.log(error),
+  });
+};
